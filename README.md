@@ -1,1 +1,1 @@
-
+Code used to assess the species and community level responses of Amazonian dung beetles to forest fragmentation, as published in the form 'Many losers and few winners in dung beetle responses to Amzonian forest fragmentation' (https://doi.org/10.1016/j.biocon.2023.110024; 2023; Biological Conservation).
