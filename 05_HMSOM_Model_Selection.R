@@ -3,7 +3,7 @@ rm(list=ls()); gc()
 library(pacman)
 p_load(tidyverse, nimble, wiqid, parallel, doSNOW, abind, MCMCvis)
 
-setwd('C:/Users/ciarn/Desktop/PhD/Dung_Beetles/')
+setwd()
 set.seed(56)
 
 load('AF_DB_HMSOM_Data.RData')
@@ -358,7 +358,7 @@ save(WAIC_results, results, WAIC_results2, results2, file = 'AF_DB_HMSOM_WAIC_Re
 load('AF_DB_HMSOM_WAIC_Results.RData')
 
 #The below code takes too long to run and I am not aiming to predict, which is where LOO is most needed
-#-----Run Model Selection Using Leave-One-Out Cross Validation-----
+#-----Run Model Selection Using Leave-One-Out Cross Validation (Broms et al., 2016)-----
 
 #0-1 loss function
 score01 <- function(preds, bool){
