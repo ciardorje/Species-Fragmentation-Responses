@@ -6,7 +6,7 @@ p_load(raster, rgdal, rgeos, gdalUtils, sp, tidyverse, parallel,
        Rfast, stars, rmapshaper, doSNOW, lwgeom, sfheaders, purrr,
        exactextractr)
 
-setwd('C:/Users/ciarn/Desktop/PhD/Dung_Beetles/')
+setwd()
 
 rasterOptions(maxmemory = 1e+10, chunksize = 5e+08)
 memory.limit(size=56000)
@@ -54,6 +54,39 @@ patch_metrics$Shape[patch_metrics$CF == 1] <- 1
 
 #Find proximity (metric) of fragments to other forest patches
 buffers <- c(100, 250, 500, 750, 1000, 2500) #buffer sizes
+
+#Proximity Index Functions
+#Function to create buffer around each fragment and remove patch area (only retain buffer)
+outer_buffer <- function(x, size){
+  x <- st_make_valid(x)
+  y <- st_buffer(x, size) %>% st_make_valid()
+  z <- st_difference(x = y, y = x)
+  return(z)
+}
+
+#FRAGSTATS proximity metric 
+prox_index <- function(focal, buff_size, polygons, CF_area){
+  
+  #Find all neighbouring patches within X m
+  focal_id <- focal$Fragment
+  dists <- gDistance(polygons, focal, byid = T)
+  polygons$Distance <- as.numeric(dists)
+  ngbs <- polygons[polygons$Distance <= buff_size,]
+  ngbs <- ngbs[ngbs$Fragment != focal_id,]
+  
+  if(!is_empty(ngbs)){
+    
+    area <- as.numeric(area(ngbs))
+    ngbs$Distance[ngbs$Distance == 0] <- 1
+    prox <- ngbs$Area/(ngbs$Distance^2) 
+    prox <- sum(prox)
+    
+  } else { prox <- 0 }
+  
+  return(prox)
+  
+}
+
 
 #Add prox columns to results df
 buffer_metrics_df <- as.data.frame(matrix(NA, nrow = nrow(patch_metrics), ncol = length(buffers)))
