@@ -3,7 +3,7 @@ rm(list=ls()); gc()
 library(pacman)
 p_load(tidyverse, cowplot, ggpubr)
 
-setwd('C:/Users/ciarn/Desktop/PhD/Dung_Beetles/')
+setwd()
 
 load('AF_DBs_Species_Habitat_Data.RData')
 
@@ -16,7 +16,7 @@ matrix_abun <- matrix %>%
   group_by(Binomial) %>% 
   mutate(Matrix = n()) %>%
   unique() %>%
-  mutate(Matrix = Matrix/(23*3)) 
+  mutate(Matrix = Matrix/(23*3)) #Standardise to abundance/trap - 23 fragments, 3 matrix traps for each
 
 #Calculate no. of traps in all fragments
 trap_no <- dbs %>% 
@@ -182,7 +182,7 @@ ggplot(data = metrics, aes(x = FD, y = FHP, colour = Binomial)) +
   geom_point(size = 3, pch = 16) +
   theme_bw() +
   labs(x = 'Forest Dependency Index', 
-       y = 'Fragment-Related Habitat Preference Index') +
+       y = 'Forest Specificity Index') +
   scale_x_continuous(limits = c(-3, 3), labels = seq(-3, 3, 1), breaks =  seq(-3, 3, 1)) +
   theme(#panel.grid = element_blank(),
         axis.text = element_text(face = 'bold', color = 'black'),
