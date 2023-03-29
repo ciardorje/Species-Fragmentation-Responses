@@ -4,8 +4,8 @@ library(pacman)
 p_load(tidyverse, nimble, wiqid, parallel, nlist,
        doSNOW, abind, MCMCvis, coda, ragg, tidyquant)
 
-setwd('C:/Users/ciarn/Desktop/PhD/Dung_Beetles/')
-set.seed(56)
+setwd()
+set.seed(111)
 options(memory.limit = 56000)
 
 load('AF_DB_HMSOM_Data.RData')
@@ -265,7 +265,7 @@ t <- do.call('rbind', gft_logic)
 mean(t, na.rm = T)
 
 
-#R2
+#Calculate model psudo-R2
 nIter <- dim(db_results[[1]])[1]
 observed <- Ymat
 intercept_prob <- MCMCpstr(db_results, params = 'lp', type = 'chains')[[1]]
