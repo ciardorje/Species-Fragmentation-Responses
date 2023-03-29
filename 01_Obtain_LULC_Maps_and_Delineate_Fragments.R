@@ -6,13 +6,13 @@ p_load(raster, rgdal, rgeos, gdalUtils, sp, tidyverse, EBImage, parallel,
        fasterRaster, smoothr, Rfast, googledrive, stars, rmapshaper,
        leafem, doSNOW, lwgeom, RANN)
 
-setwd('C:/Users/ciarn/Desktop/PhD/Dung_Beetles/')
+setwd()
 
 rasterOptions(maxmemory = 1e+10, chunksize = 5e+08)
 memory.limit(size=56000)
 
 #-----Initialize RGEE-----
-rgee_environment_dir = "C:\\Users\\ciarn\\.conda\\envs\\rgee_py"
+rgee_environment_dir = ".conda\\envs\\rgee_py"
 
 reticulate::use_python(rgee_environment_dir, required=T)
 rgee::ee_install_set_pyenv(
@@ -171,8 +171,8 @@ years <- 1985:2020
 #Apply watershed delineation and save
 for(i in 1:nlayers(af_lc)){
   
-  x <- BIOFRAGr(af_lc[[i]], res_m = 30, edge_depth = 90, 
-                gap_diameter = NA, corridor_width = 180)
+  x <- delineate(af_lc[[i]], res_m = 30, edge_depth = 90, 
+                gap_area = NA, corridor_width = 180)
   
   save(x, file = paste0('./Delineated_Patches/AF_Patches_', years[i], '.RData'))
   print(paste('\n', years[i]))
@@ -180,12 +180,3 @@ for(i in 1:nlayers(af_lc)){
 
 }
 
-af_re <- raster('../AF_RapidEye/AF_RapidEye_LC_2011-2013_Clipped.tif')
-af_re[is.na(af_re)] <- 0
-af_re[af_re == 4] <- 1
-af_re[af_re != 1] <- 0
-
-af_re_delin <- BIOFRAGr(af_re, res_m = 15, edge_depth = 90,
-                        gap_diameter = NA, corridor_width = 180)
-
-save(af_re_delin, file = './Delineated_Patches/AF_Patches_RapidEye.RData')
